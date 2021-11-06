@@ -28,7 +28,7 @@ int memcmp( const void* b1, const void* b2, long len )
     const char* p1 = b1;
     const char* p2 = b2;
     for ( ; 0 < len; len-- ) {
-        if ( *p1 != p2 ) {
+        if ( *p1 != *p2 ) {
             return ( *p1 < *p2 ) ? -1 : 1;
         }
         p1++;
@@ -88,7 +88,7 @@ int strncmp( const char* s1, const char* s2, int len )
 int putc( unsigned char c )
 {
     if ( c == '\n' ) {
-        serial_send_byte( SERIAL_DEFAULT_DEVICE, '\n' );
+        serial_send_byte( SERIAL_DEFAULT_DEVICE, '\r' );
     }
 
     return serial_send_byte( SERIAL_DEFAULT_DEVICE, c );
@@ -119,7 +119,7 @@ int putxval( unsigned long value, int column )
 
     while ( value || column ) {
         *( p-- ) = "0123456789ABCDEF"[value & 0x0F];
-        value >> 4;
+        value >>= 4;
         if ( column ) {
             column--;
         }
