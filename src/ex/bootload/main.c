@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "dram.h"
 #include "elf.h"
 #include "interrupt.h"
 #include "lib.h"
@@ -22,6 +23,9 @@ static int init( void )
 
     /* シリアルの初期化 */
     serial_init( SERIAL_DEFAULT_DEVICE );
+
+    /* DRAMの初期化 */
+    dram_init();
 
     return 0;
 }
@@ -112,6 +116,18 @@ int main( void )
                 f();
                 /* ここには返ってこない */
             }
+        }
+        /* DRAMチェック */
+        else if ( !strcmp( buf, "ramchk" ) ) {
+            dram_check();
+        }
+        /* DRAMチェック2 */
+        else if ( !strcmp( buf, "ramchk2" ) ) {
+            dram_check2();
+        }
+        /* DRAMクリア */
+        else if ( !strcmp( buf, "ramclr" ) ) {
+            dram_clear();
         }
         /* 不明 */
         else {

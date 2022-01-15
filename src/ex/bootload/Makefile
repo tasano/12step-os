@@ -20,7 +20,7 @@ H8WRITE = ../../tools/h8write/kz_h8write
 H8WRITE_SERDEV = /dev/ttyUSB0
 
 OBJS    = vector.o startup.o intr.o main.o interrupt.o
-OBJS    += lib.o serial.o xmodem.o elf.o
+OBJS    += lib.o serial.o xmodem.o elf.o dram.o
 
 TARGET  = kzload
 

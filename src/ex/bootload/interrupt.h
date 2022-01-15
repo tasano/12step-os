@@ -21,6 +21,6 @@ int softvec_init( void );
 int softvec_setintr( softvec_type_t type, softvec_handler_t handler );
 
 /* 共通割込みハンドラ */
-void interrupt(softvec_type_t type, unsigned long sp);
+void interrupt( softvec_type_t type, unsigned long sp );
 
 #endif
