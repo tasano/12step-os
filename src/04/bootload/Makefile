@@ -2,6 +2,7 @@ PREFIX  = /usr/local
 ARCH    = h8300-elf
 BINDIR  = $(PREFIX)/bin
 ADDNAME = $(ARCH)-
+TOOLSDIR= ../../../tools
 
 AR      = $(BINDIR)/$(ADDNAME)ar
 AS      = $(BINDIR)/$(ADDNAME)as
@@ -13,7 +14,7 @@ OBJDUMP = $(BINDIR)/$(ADDNAME)objdump
 RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
 STRIP   = $(BINDIR)/$(ADDNAME)strip
 
-H8WRITE = ../../tools/h8write/kz_h8write
+H8WRITE = $(TOOLSDIR)/h8write/kz_h8write
 
 # FreeBSD-4.x:/dev/cuaaX, FreeBSD-6.x:/dev/cuadX, FreeBSD(USB):/dev/cuaUx
 # Linux:/dev/ttySx, Linux(USB):/dev/ttyUSBx, Windows:comX
