@@ -1,3 +1,7 @@
+# Directories
+gdb/gdb-*
+gdb/gmp-*
+
 # Object files
 *.o
 *.elf

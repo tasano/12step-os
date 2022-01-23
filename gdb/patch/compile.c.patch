@@ -1,0 +1,136 @@
+--- compile.c.org	2022-01-22 12:50:44.929390300 +0000
++++ compile.c	2022-01-22 16:15:16.936733700 +0000
+@@ -44,6 +44,10 @@
+ 
+ static int memory_size;
+ 
++extern void sim_device_init (SIM_DESC sd, unsigned char *memory);
++extern int sim_device_sleep (SIM_DESC sd, unsigned char *memory);
++extern int sim_device_run (SIM_DESC sd, unsigned char *memory);
++
+ #define X(op, size)  (op * 4 + size)
+ 
+ #define SP (h8300hmode && !h8300_normal_mode ? SL : SW)
+@@ -1775,6 +1779,8 @@
+   int trace = 0;
+   int intMask = 0;
+   int oldmask;
++  int vec;
++  int sleeping = 0;
+   const struct h8300_sim_state *state = H8300_SIM_STATE (sd);
+   host_callback *sim_callback = STATE_CALLBACK (sd);
+ 
+@@ -1817,6 +1823,57 @@
+       h8_increment_stats (sd, code->opcode);
+ #endif
+ 
++	  if (sleeping)
++	{
++	  sim_device_sleep(sd, h8_get_memory_buf(sd));
++	  sleeping = 0;
++	}
++
++	  vec = sim_device_run (sd, h8_get_memory_buf(sd));
++	  if (vec && !intMaskBit)
++	{
++	  tmp = h8_get_reg (sd, SP_REGNUM);
++	  if(h8300_normal_mode)
++	    {
++	      tmp -= 2;
++	      SET_MEMORY_W (tmp, code->next_pc);
++	      tmp -= 2;
++	      SET_MEMORY_W (tmp, h8_get_ccr (sd));
++	    }
++	  else
++	    {
++#if 0
++	      tmp -= 4;
++	      SET_MEMORY_L (tmp, code->next_pc);
++	      tmp -= 4;
++	      SET_MEMORY_L (tmp, h8_get_ccr (sd));
++#else
++	      tmp -= 4;
++#if 0
++	      SET_MEMORY_L (tmp, (h8_get_ccr (sd) << 24) | (code->next_pc & 0xffffff));
++#else
++	      SET_MEMORY_L (tmp, (h8_get_ccr (sd) << 24) | (pc & 0xffffff));
++#endif
++#endif
++	    }
++	  intMaskBit = 1;
++	  BUILDSR (sd);
++
++	  if (h8300smode)
++	    {
++	      tmp -= 4;
++	      SET_MEMORY_L (tmp, h8_get_exr (sd));
++	    }
++
++	  h8_set_reg (sd, SP_REGNUM, tmp);
++
++	  if(h8300_normal_mode)
++	    pc = GET_MEMORY_L (vec * 2);
++	  else
++	    pc = GET_MEMORY_L (vec * 4);
++	  goto end;
++	}
++
+       if (code->opcode)
+ 	{
+ 	  cycles += code->cycles;
+@@ -3411,10 +3468,17 @@
+ 	    }
+ 	  if (h8300hmode && !h8300_normal_mode)
+ 	    {
++#if 0
+ 	      h8_set_ccr (sd, GET_MEMORY_L (tmp));
+ 	      tmp += 4;
+ 	      pc = GET_MEMORY_L (tmp);
+ 	      tmp += 4;
++#else
++	      pc = GET_MEMORY_L (tmp);
++	      h8_set_ccr (sd, (pc >> 24) & 0xff);
++	      pc &= 0xffffff;
++	      tmp += 4;
++#endif
+ 	    }
+ 	  else
+ 	    {
+@@ -3451,6 +3515,12 @@
+ 	  goto end;
+ 
+ 	case O (O_SLEEP, SN):		/* sleep */
++#if 1
++	  if (1) {
++	    sleeping = 1;
++	    goto next;
++	  } else
++#endif
+ 	  /* Check for magic numbers in r1 and r2.  */
+ 	  if ((h8_get_reg (sd, R1_REGNUM) & 0xffff) == LIBC_EXIT_MAGIC1 &&
+ 	      (h8_get_reg (sd, R2_REGNUM) & 0xffff) == LIBC_EXIT_MAGIC2 &&
+@@ -3492,10 +3562,15 @@
+    	    }
+    	  else
+    	    {
++#if 0
+    	      tmp -= 4;
+    	      SET_MEMORY_L (tmp, code->next_pc);
+    	      tmp -= 4;
+    	      SET_MEMORY_L (tmp, h8_get_ccr (sd));
++#else
++	      tmp -= 4;
++	      SET_MEMORY_L (tmp, (h8_get_ccr (sd) << 24) | (code->next_pc & 0xffffff));
++#endif
+    	    }
+    	  intMaskBit = 1;
+    	  BUILDSR (sd);
+@@ -4862,6 +4937,8 @@
+     }
+   h8_set_mask (sd, memory_size - 1);
+ 
++  sim_device_init (sd, h8_get_memory_buf (sd));
++
+   if (sim_load_file (sd, STATE_MY_NAME (sd), STATE_CALLBACK (sd), prog,
+ 		     prog_bfd, STATE_OPEN_KIND (sd) == SIM_OPEN_DEBUG,
+ 		     0, sim_write)

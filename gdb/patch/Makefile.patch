@@ -1,0 +1,10 @@
+--- Makefile.org	2022-01-22 12:50:45.884205100 +0000
++++ Makefile	2022-01-22 12:53:05.684981600 +0000
+@@ -173,6 +173,7 @@
+ ## End COMMON_PRE_CONFIG_FRAG
+ 
+ SIM_OBJS = compile.o \
++	device.o \
+ 	$(SIM_NEW_COMMON_OBJS) \
+ 	sim-resume.o
+ 
