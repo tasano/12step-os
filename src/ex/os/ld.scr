@@ -4,6 +4,11 @@ ENTRY("_start")
 
 MEMORY
 {
+    /* internal ROM (512KB) */
+    romall(rx)      : o = 0x000000, l = 0x080000    /* 512KB */
+    vectors(r)      : o = 0x000000, l = 0x000100    /* top of ROM */
+    rom(rx)         : o = 0x000100, l = 0x07FF00
+
     /* DRAM (2MB) */
     dramall(rwx)    : o = 0x400000, l = 0x200000    /* 2MB */
     ram(rwx)        : o = 0x400000 + 0x100, l = 0x200000 - 0x100
@@ -18,6 +23,10 @@ MEMORY
 
 SECTIONS
 {
+    .vectors : {
+        vector.o(.data)
+    } > vectors
+
     .softvec : {
         _softvec = . ;
     } > softvec

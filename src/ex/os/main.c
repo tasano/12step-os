@@ -2,6 +2,7 @@
 #include "interrupt.h"
 #include "kozos.h"
 #include "lib.h"
+#include "serial.h"
 
 /* システム・タスクとユーザ・タスクの起動 */
 static int start_threads( int argc, char* argv[] )
@@ -29,6 +30,18 @@ int main( void )
 {
     /* 割込み無効にする */
     INTR_DISABLE;
+
+#ifdef SIMULATOR
+    extern int bss_start, ebss;
+
+    memset( &bss_start, 0, ( long )&ebss - ( long )&bss_start );
+
+    /* ソフトウェア・割込みベクタを初期化する */
+    softvec_init();
+
+    /* シリアルの初期化 */
+    serial_init( SERIAL_DEFAULT_DEVICE );
+#endif
 
     puts( "kozos boot succeed!\n" );
 

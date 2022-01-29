@@ -17,7 +17,10 @@ OBJS    = startup.o main.o interrupt.o
 OBJS    += lib.o serial.o timer.o
 
 # sources of kozos
-OBJS	+= kozos.o syscall.o memory.o consdrv.o timerdrv.o command.o clock.o
+OBJS    += kozos.o syscall.o memory.o consdrv.o timerdrv.o command.o clock.o
+
+# for simulator
+OBJS    += vector.o intr.o
 
 TARGET  = kozos
 
@@ -26,7 +29,9 @@ CFLAGS  = -Wall -mh -nostdinc -nostdlib -fno-builtin
 CFLAGS  += -I.
 #CFLAGS += -g
 CFLAGS  += -Os
+#CFLAGS += -O0
 CFLAGS  += -DKOZOS
+#CFLAGS += -DSIMULATOR
 
 LFLAGS  = -static -T ld.scr -L.
 
