@@ -18,6 +18,8 @@ typedef enum {
     MSGBOX_ID_CONSOUTPUT,
     MSGBOX_ID_TIMDRIVE,
     MSGBOX_ID_TIMEXPIRE,
+    MSGBOX_ID_NETPROC,
+    MSGBOX_ID_ETHPROC,
     MSGBOX_ID_NUM,
 } kz_msgbox_id_t;
 

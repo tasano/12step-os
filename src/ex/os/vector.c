@@ -5,6 +5,7 @@ extern void intr_softerr( void ); /* ソフトウェア・エラー */
 extern void intr_syscall( void ); /* システム・コール */
 extern void intr_serintr( void ); /* シリアル割込み */
 extern void intr_timintr( void ); /* タイマ割込み */
+extern void intr_ethintr( void ); /* イーサネット・コントローラ割込み */
 
 /*
  * 割込みベクタの設定
@@ -14,7 +15,7 @@ void ( *vectors[] )( void ) = {
     start,        NULL,         NULL,         NULL,         NULL,
     NULL,         NULL,         NULL,         intr_syscall, intr_softerr,
     intr_softerr, intr_softerr, NULL,         NULL,         NULL,
-    NULL,         NULL,         NULL,         NULL,         NULL,
+    NULL,         NULL,         intr_ethintr, NULL,         NULL,
     NULL,         NULL,         NULL,         NULL,         NULL,
     NULL,         NULL,         NULL,         NULL,         NULL,
     NULL,         NULL,         NULL,         NULL,         NULL,

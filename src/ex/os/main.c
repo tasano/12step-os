@@ -7,10 +7,14 @@
 /* システム・タスクとユーザ・タスクの起動 */
 static int start_threads( int argc, char* argv[] )
 {
-    kz_run( consdrv_main, "consdrv", 1, 0x200, 0, NULL );
-    kz_run( command_main, "command", 8, 0x200, 0, NULL );
+    kz_run( consdrv_main, "consdrv", 1, 0x100, 0, NULL );
+    kz_run( command_main, "command", 8, 0x100, 0, NULL );
     kz_run( timerdrv_main, "timerdrv", 2, 0x100, 0, NULL );
+#if 0
     kz_run( clock_main, "clock", 9, 0x100, 0, NULL );
+#endif
+    kz_run( netdrv_main, "netdrv", 10, 0x100, 0, NULL );
+    kz_run( ethernet_main, "ethernet", 11, 0x100, 0, NULL );
 
     /* 優先順位を下げて、アイドルスレッドに移行する */
     kz_chpri( 15 );

@@ -36,9 +36,11 @@ void kz_srvcall( kz_syscall_type_t type, kz_syscall_param_t* param );
 /* システム・タスク */
 int consdrv_main( int argc, char* argv[] );
 int timerdrv_main( int argc, char* argv[] );
+int netdrv_main( int argc, char* argv[] );
 
 /* ユーザ・タスク */
 int command_main( int argc, char* argv[] );
 int clock_main( int argc, char* argv[] );
+int ethernet_main( int argc, char* argv[] );
 
 #endif

@@ -105,6 +105,8 @@ static int timerdrv_command( struct timerreg* tim, int cmd, char* p )
     default:
         break;
     }
+
+    return 0;
 }
 
 int timerdrv_main( int argc, char* argv[] )

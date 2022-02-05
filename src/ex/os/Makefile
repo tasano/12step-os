@@ -14,10 +14,12 @@ RANLIB  = $(BINDIR)/$(ADDNAME)ranlib
 STRIP   = $(BINDIR)/$(ADDNAME)strip
 
 OBJS    = startup.o main.o interrupt.o
-OBJS    += lib.o serial.o timer.o
+OBJS    += lib.o serial.o timer.o rtl8019.o
 
 # sources of kozos
-OBJS    += kozos.o syscall.o memory.o consdrv.o timerdrv.o command.o clock.o
+OBJS    += kozos.o syscall.o memory.o command.o clock.o
+OBJS    += ethernet.o
+OBJS    += consdrv.o timerdrv.o netdrv.o
 
 # for simulator
 OBJS    += vector.o intr.o

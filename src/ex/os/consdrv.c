@@ -173,6 +173,8 @@ static int consdrv_command( struct consreg* cons, kz_thread_id_t id, int index,
     default:
         break;
     }
+
+    return 0;
 }
 
 int consdrv_main( int argc, char* argv[] )

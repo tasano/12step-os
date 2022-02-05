@@ -6,7 +6,7 @@
 #include "memory.h"
 #include "syscall.h"
 
-#define THREAD_NUM           6
+#define THREAD_NUM           16
 #define PRIORITY_NUM         16
 #define THREAD_NAME_SIZE     15
 #define KZ_THREAD_FLAG_READY ( 1 << 0 )
